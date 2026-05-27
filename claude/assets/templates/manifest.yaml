@@ -1,0 +1,29 @@
+schema_version: "1.0"
+project:
+  title: "<project title>"
+  slug: "<project-slug>"
+  created_at: "<iso-8601-utc>"
+  delivery_mode: "file-first"
+  target_audience: "expert"
+  target_depth: "comprehensive"
+  language: "auto"
+  user_request: "<original request or concise paraphrase>"
+constraints:
+  max_chapter_words: 2500
+  citation_policy: "follow the active environment rules"
+  style: "clear, structured, domain-appropriate"
+artifacts:
+  index: "index.md"
+  final: "final/final_merged.md"
+progress:
+  current_phase: "planning"
+  current_chapter_id: "01"
+chapters:
+  - id: "01"
+    title: "overview"
+    file: "chapters/01_overview.md"
+    status: "planned"
+    target_words: 1500
+    dependencies: ""
+    summary: ""
+    quality_flags: ""
