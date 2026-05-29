@@ -60,7 +60,11 @@ def main() -> int:
     parser.add_argument("--audience", default="expert", help="target audience label")
     parser.add_argument("--depth", default="comprehensive", help="target depth label")
     parser.add_argument("--language", default="auto", help="language label, for example zh-CN or en")
-    parser.add_argument("--style", default="clear, structured, domain-appropriate", help="style constraints")
+    parser.add_argument(
+        "--style",
+        default="clear, structured, export-friendly, domain-appropriate; use tables, checklists, and callouts only when they improve comprehension over prose",
+        help="style constraints",
+    )
     parser.add_argument("--user-request", default="", help="original request or concise paraphrase")
     parser.add_argument("--target-words", type=int, default=1500, help="target words or mixed-language units per chapter")
     parser.add_argument("--force", action="store_true", help="refresh generated manifest, index, and empty/stub chapter files")
