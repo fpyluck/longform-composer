@@ -9,6 +9,10 @@ description: orchestrate comprehensive long-form markdown deliverables that are 
 
 Do not try to force a large deliverable into one chat message. Convert long-form work into durable markdown artifacts, explicit checkpoints, deterministic validation, and a final merged deliverable. This skill is a packaging and workflow layer: it must preserve the model's intended meaning, claims, emphasis, uncertainty, and user-facing answer semantics while changing only organization, storage, and delivery. It does not change model token limits, context limits, rate limits, or product quotas.
 
+## Presentation Contract
+
+The merged Markdown is the canonical semantic source and should also be export-friendly: one H1, stable heading hierarchy, concise document profile, useful table of contents, readable tables, and chapter summaries only when they improve navigation. Use plain Markdown that converts cleanly to DOCX/PDF/PPTX; avoid decorative clutter, custom HTML, or layout tricks that reduce portability. Optional DOCX export must preserve the full merged content rather than summarize it. PPTX is normally a presentation derivative from the outline or summaries, not a semantic replacement for the full document, unless the user explicitly asks for a full-slide rendering.
+
 ## Output Route
 
 - **File route**: Default when a filesystem, repository, or workspace is available. Create files, update progress state, validate, merge, and summarize paths in chat. If the current repo has an obvious docs location, place outputs there; otherwise use `long_output/<project-slug>/`.
@@ -26,6 +30,7 @@ Do not try to force a large deliverable into one chat message. Convert long-form
      index.md
      chapters/
      final/
+     exports/
      logs/
      notes/
      sources/
@@ -47,7 +52,8 @@ A project is complete only when these files exist:
 - `manifest.yaml`: authoritative state and chapter order.
 - `index.md`: readable outline and navigation guide.
 - `chapters/*.md`: one focused chapter per file.
-- `final/final_merged.md`: merged full deliverable, unless the user explicitly asked for segmented files only.
+- `final/final_merged.md`: merged full deliverable and canonical source, unless the user explicitly asked for segmented files only.
+- `exports/`: optional generated documents, such as DOCX/PDF/PPTX, produced from `final/final_merged.md` without semantic rewriting.
 - `logs/progress.md`: short change log for resumed or multi-pass work.
 
 Use `references/manifest-schema.md` for the full manifest schema and status lifecycle.
@@ -83,6 +89,7 @@ Use bundled scripts for deterministic file operations whenever possible:
 - `scripts/init_longform_project.py`: initialize a long-form markdown project with manifest, index, folders, and chapter stubs.
 - `scripts/validate_longform.py`: validate manifest consistency, chapter files, statuses, placeholders, and merge readiness.
 - `scripts/merge_markdown.py`: merge chapter files in manifest order into `final/final_merged.md` with a table of contents.
+- `scripts/export_longform.py`: export the merged Markdown into `exports/`, defaulting to DOCX via Pandoc with a `python-docx` fallback.
 - `scripts/split_markdown.py`: split an existing long markdown file into chapter files and generate a manifest.
 - `scripts/self_test.py`: run a quick local smoke test for the bundled scripts.
 
@@ -92,6 +99,7 @@ Typical file-first command sequence:
 python scripts/init_longform_project.py --title "project title" --chapters "overview|background|implementation|examples|risks|checklist"
 python scripts/validate_longform.py --root long_output/project-title
 python scripts/merge_markdown.py --root long_output/project-title
+python scripts/export_longform.py --root long_output/project-title --format docx
 ```
 
 ## Chat-Only Protocol
@@ -113,6 +121,7 @@ Before delivery, verify:
 - Done chapters contain substantive content, not placeholders.
 - The final file follows manifest order.
 - Headings are coherent after merge.
+- The merged Markdown remains readable as Markdown and converts cleanly to requested document formats without summarizing or dropping content.
 - User constraints are reflected in the manifest and output where they affect the deliverable.
 - Claims that require current or external evidence follow the surrounding environment's browsing and citation rules.
 - The final light `减法` review has not changed the intended answer semantics.
