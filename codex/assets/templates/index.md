@@ -1,13 +1,25 @@
 # <project title>
 
-## Reading guide
+> Navigation and export map for this longform project. The merged Markdown remains the canonical semantic source for optional DOCX/PDF/PPTX outputs.
 
-Use this file as the table of contents and navigation layer for the segmented markdown deliverable.
+## Project snapshot
 
-## Table of contents
+| Field | Value |
+|---|---|
+| Audience | expert |
+| Depth | comprehensive |
+| Language | auto |
+| Style | clear, structured, export-friendly, domain-appropriate; use tables, checklists, and callouts only when they improve comprehension over prose |
+| Current phase | planning |
+| Request | <original request or concise paraphrase> |
 
-- `01` [overview](chapters/01_overview.md) - `planned`
+## Chapter map
 
-## Final artifact
+| ID | Chapter | Status | Target | Summary |
+|---|---|---|---:|---|
+| `01` | [overview](chapters/01_overview.md) | `planned` | 1500 | - |
 
-- [final merged markdown](final/final_merged.md)
+## Deliverables
+
+- [Merged Markdown](final/final_merged.md) - complete semantic source and default reading file.
+- `exports/` - optional generated DOCX/PDF/PPTX outputs when requested.
