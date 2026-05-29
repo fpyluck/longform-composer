@@ -48,7 +48,7 @@ Review at the levels that apply:
 
 - local chapter quality: completeness, claims, terminology, and useful examples
 - cross-chapter quality: overlap, gaps, order, and references
-- final artifact quality: heading hierarchy, navigation, and consistency with user constraints
+- final artifact quality: heading hierarchy, navigation, export-friendly Markdown, and consistency with user constraints
 
 Use `scripts/validate_longform.py` before merge and after merge when script execution is available.
 
@@ -70,3 +70,7 @@ Do not paste the full final document into chat unless explicitly requested. Retu
 - reading order
 - known limitations or assumptions
 - next suggested action only if it directly helps completion
+
+## 8. Optional document exports
+
+When the user asks for Word/DOCX/PDF output, run `scripts/export_longform.py` after merge. Treat DOCX/PDF as faithful renderings of `final/final_merged.md`, not as summaries. Use PPTX only when the user wants a presentation or briefing artifact; derive it from the outline and chapter summaries unless the user explicitly asks for a full-content slide rendering.
