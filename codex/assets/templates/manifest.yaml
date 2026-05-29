@@ -11,10 +11,11 @@ project:
 constraints:
   max_chapter_words: 2500
   citation_policy: "follow the active environment rules"
-  style: "clear, structured, domain-appropriate"
+  style: "clear, structured, export-friendly, domain-appropriate; use tables, checklists, and callouts only when they improve comprehension over prose"
 artifacts:
   index: "index.md"
   final: "final/final_merged.md"
+  exports: "exports/"
 progress:
   current_phase: "planning"
   current_chapter_id: "01"
