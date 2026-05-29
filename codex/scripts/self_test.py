@@ -74,8 +74,11 @@ def main() -> int:
 
         run(script_cmd("validate_longform.py", "--root", root))
         run(script_cmd("merge_markdown.py", "--root", root))
+        run(script_cmd("export_longform.py", "--root", root, "--format", "docx"))
         final = root / "final" / "final_merged.md"
+        docx = root / "exports" / "final_merged.docx"
         assert final.exists(), "merged file was not created"
+        assert docx.exists(), "docx export was not created"
         assert "# Sample Project" in final.read_text(encoding="utf-8")
 
         outside_merge = Path(tmp) / "outside-final.md"
@@ -119,7 +122,9 @@ def main() -> int:
         assert "Not A Chapter" not in split_titles, "split treated fenced code heading as a chapter"
         run(script_cmd("validate_longform.py", "--root", split_root))
         run(script_cmd("merge_markdown.py", "--root", split_root))
+        run(script_cmd("export_longform.py", "--root", split_root, "--format", "docx", "--engine", "python-docx"))
         assert (split_root / "final" / "final_merged.md").exists(), "split project did not merge"
+        assert (split_root / "exports" / "final_merged.docx").exists(), "split project did not export docx"
 
         missing_input = run_capture(script_cmd("split_markdown.py", Path(tmp) / "missing.md"))
         assert missing_input.returncode == 2, "missing input should return a usage-style error"
