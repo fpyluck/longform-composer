@@ -18,6 +18,7 @@ from longform_common import (
     get_title,
     load_project,
     normalize_status,
+    table_cell,
     write_progress_log,
 )
 
@@ -32,11 +33,31 @@ def display_path(path: Path, root: Path) -> str:
 
 
 def build_toc(chapters: List[Dict[str, object]]) -> str:
-    lines = ["## Table of contents", ""]
+    lines = ["## Contents", ""]
     for chapter in chapters:
         cid = str(chapter.get("id", ""))
         title = str(chapter.get("title", "untitled"))
-        lines.append(f"- [{cid}. {title}](#{chapter_anchor(title)})")
+        summary = str(chapter.get("summary") or "").strip()
+        suffix = f" - {summary}" if summary else ""
+        lines.append(f"- [{cid}. {title}](#{chapter_anchor(title)}){suffix}")
+    return "\n".join(lines).strip() + "\n"
+
+
+def build_document_profile(manifest: Dict[str, object], included: List[Dict[str, object]]) -> str:
+    project = manifest.get("project") if isinstance(manifest.get("project"), dict) else {}
+    constraints = manifest.get("constraints") if isinstance(manifest.get("constraints"), dict) else {}
+    lines = [
+        "## Document profile",
+        "",
+        "| Field | Value |",
+        "|---|---|",
+        f"| Audience | {table_cell(project.get('target_audience'))} |",
+        f"| Depth | {table_cell(project.get('target_depth'))} |",
+        f"| Language | {table_cell(project.get('language'))} |",
+        f"| Style | {table_cell(constraints.get('style'))} |",
+        f"| Request | {table_cell(project.get('user_request'))} |",
+        f"| Source chapters | {len(included)} |",
+    ]
     return "\n".join(lines).strip() + "\n"
 
 
@@ -78,7 +99,14 @@ def merge(root: Path, output: Path | None = None, include_planned: bool = False,
         output = output if output.is_absolute() else root / output
     output.parent.mkdir(parents=True, exist_ok=True)
 
-    parts: List[str] = [f"# {title}", "", "> merged from chapter files by longform-composer.", ""]
+    parts: List[str] = [
+        f"# {title}",
+        "",
+        "> Complete merged Markdown generated from the chapter set. Treat this file as the semantic source for optional document exports.",
+        "",
+        build_document_profile(manifest, included),
+        "",
+    ]
     if not no_toc:
         parts.append(build_toc(included))
         parts.append("")
