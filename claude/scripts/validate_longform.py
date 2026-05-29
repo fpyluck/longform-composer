@@ -20,6 +20,7 @@ PLACEHOLDER_PATTERNS = [
     r"<!--\s*add examples",
     r"<!--\s*summarize",
     r"<!--\s*explain how",
+    r"<(state|write|include|summarize|explain)\b[^>]*>",
 ]
 
 
