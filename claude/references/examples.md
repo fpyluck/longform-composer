@@ -56,7 +56,7 @@ Recommended behavior:
 User request:
 
 ```text
-Analyze this repo and produce full developer documentation. The assistant keeps writing too little.
+Analyze this repo and produce full developer documentation. Codex keeps writing too little.
 ```
 
 Recommended behavior:
