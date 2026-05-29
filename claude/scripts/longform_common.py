@@ -291,7 +291,7 @@ def build_manifest(
     target_audience: str = "expert",
     target_depth: str = "comprehensive",
     language: str = "auto",
-    style: str = "clear, structured, domain-appropriate",
+    style: str = "clear, structured, export-friendly, domain-appropriate; use tables, checklists, and callouts only when they improve comprehension over prose",
     user_request: str = "",
     target_words: int = 1500,
     chapter_status: str = "planned",
@@ -315,7 +315,7 @@ def build_manifest(
             "citation_policy": "follow the active environment rules",
             "style": style,
         },
-        "artifacts": {"index": "index.md", "final": "final/final_merged.md"},
+        "artifacts": {"index": "index.md", "final": "final/final_merged.md", "exports": "exports/"},
         "progress": {"current_phase": "planning", "current_chapter_id": "01" if chapter_records else ""},
         "chapters": chapter_records,
     }
@@ -346,6 +346,13 @@ def chapter_anchor(title: str) -> str:
     return text.strip("-") or "chapter"
 
 
+def table_cell(value: Any, fallback: str = "-") -> str:
+    text = str(value or "").strip()
+    if not text:
+        text = fallback
+    return text.replace("\n", "<br>").replace("|", "\\|")
+
+
 def demote_headings(markdown: str, levels: int = 1) -> str:
     lines: List[str] = []
     for line in markdown.splitlines():
@@ -367,14 +374,52 @@ def read_nonempty(path: Path) -> str:
 def update_index(root: Path, manifest: Dict[str, Any]) -> Path:
     title = get_title(manifest)
     chapters = get_chapters(manifest)
-    lines = [f"# {title}", "", "## Reading guide", "", "This index is generated from manifest.yaml.", "", "## Table of contents", ""]
+    project = manifest.get("project") if isinstance(manifest.get("project"), dict) else {}
+    constraints = manifest.get("constraints") if isinstance(manifest.get("constraints"), dict) else {}
+    progress = manifest.get("progress") if isinstance(manifest.get("progress"), dict) else {}
+    artifacts = manifest.get("artifacts") if isinstance(manifest.get("artifacts"), dict) else {}
+
+    lines = [
+        f"# {title}",
+        "",
+        "> Navigation and export map for this longform project. The merged Markdown remains the canonical semantic source for optional DOCX/PDF/PPTX outputs.",
+        "",
+        "## Project snapshot",
+        "",
+        "| Field | Value |",
+        "|---|---|",
+        f"| Audience | {table_cell(project.get('target_audience'))} |",
+        f"| Depth | {table_cell(project.get('target_depth'))} |",
+        f"| Language | {table_cell(project.get('language'))} |",
+        f"| Style | {table_cell(constraints.get('style'))} |",
+        f"| Current phase | {table_cell(progress.get('current_phase'))} |",
+        f"| Request | {table_cell(project.get('user_request'))} |",
+        "",
+        "## Chapter map",
+        "",
+        "| ID | Chapter | Status | Target | Summary |",
+        "|---|---|---|---:|---|",
+    ]
     for chapter in chapters:
         cid = str(chapter.get("id", ""))
         ctitle = str(chapter.get("title", "untitled"))
         cfile = str(chapter.get("file", ""))
         status = normalize_status(chapter.get("status"))
-        lines.append(f"- `{cid}` [{ctitle}]({cfile}) - `{status}`")
-    lines.extend(["", "## Final artifact", "", "- [final merged markdown](final/final_merged.md)", ""])
+        target = table_cell(chapter.get("target_words"), "")
+        summary = table_cell(chapter.get("summary"))
+        lines.append(f"| `{cid}` | [{table_cell(ctitle)}]({cfile}) | `{status}` | {target} | {summary} |")
+    final_path = table_cell(artifacts.get("final"), "final/final_merged.md")
+    exports_path = table_cell(artifacts.get("exports"), "exports/")
+    lines.extend(
+        [
+            "",
+            "## Deliverables",
+            "",
+            f"- [Merged Markdown]({final_path}) - complete semantic source and default reading file.",
+            f"- `{exports_path}` - optional generated DOCX/PDF/PPTX outputs when requested.",
+            "",
+        ]
+    )
     path = root / "index.md"
     path.write_text("\n".join(lines), encoding="utf-8")
     return path
@@ -414,5 +459,5 @@ def create_chapter_stub(title: str) -> str:
 
 
 def ensure_project_structure(root: Path) -> None:
-    for relative in ["chapters", "final", "logs", "notes", "sources"]:
+    for relative in ["chapters", "final", "logs", "notes", "sources", "exports"]:
         (root / relative).mkdir(parents=True, exist_ok=True)
