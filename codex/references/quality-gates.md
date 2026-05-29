@@ -31,8 +31,16 @@ Use these checks before telling the user the long-form deliverable is complete.
 - The final file has one primary H1 title.
 - Chapter headings are demoted or normalized so the final hierarchy is readable.
 - The table of contents points to the actual chapter sequence.
+- The index and final document include enough project context for a reader opening the file cold.
+- Tables, blockquotes, lists, and code blocks use portable Markdown that common DOCX/PDF exporters can preserve.
 - Repeated summaries are either retained intentionally or condensed for the final genre.
 - A light `减法` pass removes redundant prose or structure without changing answer semantics, emphasis, uncertainty, required coverage, evidence, caveats, or useful examples.
+
+## Export gate
+
+- Requested DOCX/PDF exports are generated from `final/final_merged.md`, not from a shortened chat summary.
+- Exported files are placed under `exports/` and named after the source Markdown.
+- PPTX output is labeled as a presentation derivative unless it deliberately contains the full document content.
 
 ## Delivery gate
 
