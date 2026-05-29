@@ -18,6 +18,7 @@ Longform Composer is a ChatGPT/Codex skill for producing comprehensive markdown 
 - `scripts/init_longform_project.py`: create a project scaffold
 - `scripts/validate_longform.py`: validate project state and chapter files
 - `scripts/merge_markdown.py`: merge chapters into `final/final_merged.md`
+- `scripts/export_longform.py`: export the merged markdown to `exports/*.docx` and other supported document formats without summarizing content
 - `scripts/split_markdown.py`: split an existing markdown file into chapter files
 - `scripts/self_test.py`: smoke test for bundled scripts
 
